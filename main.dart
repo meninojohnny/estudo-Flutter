@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 void main(){
-  runApp(AppWidget('Joao vitor'));
+  runApp(AppWidget(title: 'Joao vitor'));
 }
 
 class AppWidget extends StatelessWidget{
-  var title;
+  final String title;
   
-  AppWidget([this.title]);
+  const AppWidget({Key key, this.title = ''}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {

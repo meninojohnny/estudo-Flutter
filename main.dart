@@ -33,17 +33,16 @@ class _HomePageState extends State<HomePage> {
         title: Text('Projeto1'),
       ),
       drawer: Drawer(
-        child: ListView(
-          children: [
-            UserAccountsDrawerHeader(
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.purple,
-                child: Text('J'),
-              ),
-              accountName: Text('Johnny'),
-              accountEmail: Text('Johnny@gmail.com'),           
+        child: ListView(children: [
+          UserAccountsDrawerHeader(
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Colors.purple,
+              child: Text('J'),
             ),
-            ListTile(
+            accountName: Text('Johnny'),
+            accountEmail: Text('Johnny@gmail.com'),
+          ),
+          ListTile(
               title: Text('Page 1'),
               trailing: Icon(Icons.arrow_forward),
               onTap: () {
@@ -52,9 +51,8 @@ class _HomePageState extends State<HomePage> {
                 setState(() {
                   indexPage = 0;
                 });
-              }
-            ),
-            ListTile(
+              }),
+          ListTile(
               title: Text('Page 2'),
               trailing: Icon(Icons.arrow_forward),
               onTap: () {
@@ -63,9 +61,8 @@ class _HomePageState extends State<HomePage> {
                 setState(() {
                   indexPage = 1;
                 });
-              }
-            ),
-            ListTile(
+              }),
+          ListTile(
               title: Text('Page 3'),
               trailing: Icon(Icons.arrow_forward),
               onTap: () {
@@ -74,10 +71,8 @@ class _HomePageState extends State<HomePage> {
                 setState(() {
                   indexPage = 2;
                 });
-              }
-            ),
-          ]
-        ),
+              }),
+        ]),
       ),
       body: PageView(controller: _pageController, children: [
         PageOne(),
@@ -86,7 +81,7 @@ class _HomePageState extends State<HomePage> {
       ]),
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: indexPage,
-          onTap: (int index) { 
+          onTap: (int index) {
             setState(() {
               indexPage = index;
             });
@@ -134,7 +129,7 @@ class PageOne extends StatelessWidget {
           Container(
             color: Colors.red,
             height: 200,
-            width: (MediaQuery.of(context).size.width)/2,
+            width: (MediaQuery.of(context).size.width) / 2,
             child: Center(
               child: Text(
                 'Page 2',
@@ -145,7 +140,7 @@ class PageOne extends StatelessWidget {
           Container(
             color: Colors.yellow,
             height: 200,
-            width: (MediaQuery.of(context).size.width)/2,
+            width: (MediaQuery.of(context).size.width) / 2,
             child: Center(
               child: Text(
                 'Page 3',

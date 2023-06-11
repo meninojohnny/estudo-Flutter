@@ -32,6 +32,53 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('Projeto1'),
       ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            UserAccountsDrawerHeader(
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.purple,
+                child: Text('J'),
+              ),
+              accountName: Text('Johnny'),
+              accountEmail: Text('Johnny@gmail.com'),           
+            ),
+            ListTile(
+              title: Text('Page 1'),
+              trailing: Icon(Icons.arrow_forward),
+              onTap: () {
+                _pageController.jumpToPage(0);
+                Navigator.pop(context);
+                setState(() {
+                  indexPage = 0;
+                });
+              }
+            ),
+            ListTile(
+              title: Text('Page 2'),
+              trailing: Icon(Icons.arrow_forward),
+              onTap: () {
+                _pageController.jumpToPage(1);
+                Navigator.pop(context);
+                setState(() {
+                  indexPage = 1;
+                });
+              }
+            ),
+            ListTile(
+              title: Text('Page 3'),
+              trailing: Icon(Icons.arrow_forward),
+              onTap: () {
+                _pageController.jumpToPage(2);
+                Navigator.pop(context);
+                setState(() {
+                  indexPage = 2;
+                });
+              }
+            ),
+          ]
+        ),
+      ),
       body: PageView(controller: _pageController, children: [
         PageOne(),
         PageTwo(),
@@ -39,7 +86,7 @@ class _HomePageState extends State<HomePage> {
       ]),
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: indexPage,
-          onTap: (int index) {
+          onTap: (int index) { 
             setState(() {
               indexPage = index;
             });
@@ -51,11 +98,11 @@ class _HomePageState extends State<HomePage> {
               label: 'item 1',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.add_card),
+              icon: Icon(Icons.add),
               label: 'item 2',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.add_alert),
+              icon: Icon(Icons.add),
               label: 'item 3',
             ),
           ]),
@@ -87,22 +134,22 @@ class PageOne extends StatelessWidget {
           Container(
             color: Colors.red,
             height: 200,
-            width: 200,
+            width: (MediaQuery.of(context).size.width)/2,
             child: Center(
               child: Text(
                 'Page 2',
-                style: TextStyle(color: Colors.white, fontSize: 30),
+                style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ),
           ),
           Container(
             color: Colors.yellow,
             height: 200,
-            width: 200,
+            width: (MediaQuery.of(context).size.width)/2,
             child: Center(
               child: Text(
                 'Page 3',
-                style: TextStyle(color: Colors.white, fontSize: 30),
+                style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ),
           ),
@@ -131,7 +178,7 @@ class PageTree extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.red,
+      color: Colors.green,
       child: Center(
         child: Text(
           'Page 3',

@@ -57,13 +57,11 @@ class _Counter extends State<Counter> {
               if (contador > 0) {
                 contador--;
               }
-            }
-           );
+            });
           },
           child: Icon(Icons.remove),
         ),
-      ]
-     ),
+      ]),
     );
   }
 }

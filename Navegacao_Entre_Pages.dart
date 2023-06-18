@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.green,
       ),
       initialRoute: '/',
-      routes: {
+      routes: { // cria rostas entre as páginas
         '/': (context) => PageOne(args: 'Page 2'),
         '/pageTwo': (context) => PageTwo(args: 'Page 1'),
       },
@@ -33,7 +33,7 @@ class PageOne extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            Navigator.of(context).pushNamed('/pageTwo');
+            Navigator.of(context).pushNamed('/pageTwo'); // vai para a página selecionada
           },
           child: Text('Ir para Page 2'),
         ),

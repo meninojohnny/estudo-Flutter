@@ -61,38 +61,15 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             children: [
               Icon(Icons.people, size: 80),
-              TextField(
-                decoration: InputDecoration(
-                  label: Text('Username or Email'),
-                ),
-                onChanged: _controller.setLogin,
-              ),
+              CustomTextField(
+                  label: 'Username', onChanged: _controller.setLogin),
               SizedBox(height: 2),
-              TextField(
-                decoration: InputDecoration(
-                  label: Text('Password'),
-                ),
-                obscureText: true,
-                onChanged: _controller.setPassword,
-              ),
+              CustomTextField(
+                  label: 'Password',
+                  onChanged: _controller.setPassword,
+                  obscureText: true),
               SizedBox(height: 15),
-              ValueListenableBuilder<bool>(
-                  valueListenable: _controller.inLoader,
-                  builder: (context, value, child) => value
-                      ? CircularProgressIndicator()
-                      : ElevatedButton(
-                          onPressed: () {
-                            _controller.auth().then((result) {
-                              if (result) {
-                                Navigator.of(context)
-                                    .pushReplacementNamed('/splashPage');
-                              } else {
-                                print('ACESSO NEGADO');
-                              }
-                            });
-                          },
-                          child: Text('Login'),
-                        )),
+              CustomLoginComponent(loginController: _controller),
             ],
           ),
         ),
@@ -115,6 +92,54 @@ class LoginController {
     await Future.delayed(Duration(seconds: 5));
     print('Username/Email: $_login | Password: $_password');
     inLoader.value = false;
-    return (_login == 'johnny' && _password == 'didifeiosa');
+    return (_login == 'johnny' && _password == '1234');
+  }
+}
+
+class CustomLoginComponent extends StatelessWidget {
+  final LoginController loginController;
+  CustomLoginComponent({Key? key, required this.loginController})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+        valueListenable: loginController.inLoader,
+        builder: (context, value, child) => value
+            ? CircularProgressIndicator()
+            : ElevatedButton(
+                onPressed: () {
+                  loginController.auth().then((result) {
+                    if (result) {
+                      Navigator.of(context).pushReplacementNamed('/splashPage');
+                    } else {
+                      print('ACESSO NEGADO');
+                    }
+                  });
+                },
+                child: Text('Login'),
+              ));
+  }
+}
+
+class CustomTextField extends StatelessWidget {
+  final String label;
+  final Function(String) onChanged;
+  final bool obscureText;
+  CustomTextField(
+      {Key? key,
+      required this.label,
+      required this.onChanged,
+      this.obscureText = false})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      decoration: InputDecoration(
+        label: Text(label),
+      ),
+      obscureText: obscureText,
+      onChanged: onChanged,
+    );
   }
 }

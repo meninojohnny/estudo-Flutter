@@ -4,161 +4,50 @@ import 'dart:convert';
 String exempleJson = '[{"userId": 1, "id": 1, "title": "O Incrivel Mundo de Jack", "body": "Um filme sobre um esqueleto"}]';
 
 void main() {
-  //runApp(MyApp());
-  HomeRepositoryMock e1 = HomeRepositoryMock();
-  print(e1);
+  
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
+  
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Flutter', initialRoute: '/splashPage', routes: {
-      '/splashPage': (_) => SplashPage(),
-      '/loginPage': (_) => LoginPage(),
-      '/loginPage2': (_) => LoginPage2(),
-    });
+    return MaterialApp(home: HomePage());
   }
 }
 
-class SplashPage extends StatefulWidget {
-  const SplashPage({Key? key}) : super(key: key);
-
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+  
   @override
-  _SplashPageState createState() => _SplashPageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _HomePageState extends State<HomePage> {
+  final HomeController _controller = HomeController(HomeRepositoryMock());
+  
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 5)).then(
-      (_) => Navigator.of(context).pushReplacementNamed('/loginPage'),
-    );
+    _controller.fetch();
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.green,
-      child: Center(
-        child: CircularProgressIndicator(color: Colors.white),
-      ),
-    );
-  }
-}
-
-class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
-
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  LoginController _controller = LoginController();
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(
-          width: 200,
-          height: 300,
-          child: Column(
-            children: [
-              Icon(Icons.people, size: 80),
-              CustomTextField(
-                  label: 'Username', onChanged: _controller.setLogin),
-              SizedBox(height: 2),
-              CustomTextField(
-                  label: 'Password',
-                  onChanged: _controller.setPassword,
-                  obscureText: true),
-              SizedBox(height: 15),
-              CustomLoginComponent(loginController: _controller),
-            ],
-          ),
-        ),
+      body: ValueListenableBuilder(
+        valueListenable: _controller.posts,
+        builder: (_, list, child) {
+          return ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (_, index) => ListTile(
+              title: Text(list[index].title),
+            ),
+          );
+        },
       ),
     );
   }
-}
-
-class LoginPage2 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(color: Colors.red);
-  }
-}
-
-class LoginController {
-  ValueNotifier<bool> inLoader = ValueNotifier<bool>(false);
-
-  String _login = '';
-  setLogin(String login) => _login = login;
-
-  String _password = '';
-  setPassword(String password) => _password = password;
-
-  Future<bool> auth() async {
-    inLoader.value = true;
-    await Future.delayed(Duration(seconds: 5));
-    print('Username/Email: $_login | Password: $_password');
-    inLoader.value = false;
-    return (_login == 'johnny' && _password == '1234');
-  }
-}
-
-class CustomLoginComponent extends StatelessWidget {
-  final LoginController loginController;
-  CustomLoginComponent({Key? key, required this.loginController})
-      : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-        valueListenable: loginController.inLoader,
-        builder: (context, value, child) => value
-            ? CircularProgressIndicator()
-            : ElevatedButton(
-                onPressed: () {
-                  loginController.auth().then((result) {
-                    if (result) {
-                      Navigator.of(context).pushReplacementNamed('/loginPage2');
-                    } else {
-                      print('ACESSO NEGADO');
-                    }
-                  });
-                },
-                child: Text('Login'),
-              ));
-  }
-}
-
-class CustomTextField extends StatelessWidget {
-  final String label;
-  final Function(String) onChanged;
-  final bool obscureText;
-  CustomTextField(
-      {Key? key,
-      required this.label,
-      required this.onChanged,
-      this.obscureText = false})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      decoration: InputDecoration(
-        label: Text(label),
-      ),
-      obscureText: obscureText,
-      onChanged: onChanged,
-    );
-  }
-}
-
-abstract class HomeRepository {
-  Future<List<PostModel>> getList(); 
 }
 
 class PostModel {
@@ -166,23 +55,31 @@ class PostModel {
   final int id;
   final String title;
   final String body;
-  
   PostModel(this.userId, this.id, this.title, this.body);
-  factory PostModel.fromJson(Map json){
+  factory PostModel.fromJson(Map json) {
     return PostModel(json['userId'], json['id'], json['title'], json['body']);
   }
 }
 
+abstract class HomeRepository {
+  Future<List<PostModel>> getList();
+}
+
 class HomeRepositoryMock implements HomeRepository {
-  
   @override
   Future<List<PostModel>> getList() async {
-    List<Map> jsonList = json.decode(exempleJson);
+    List jsonList = json.decode(exempleJson);
     return jsonList.map((e) => PostModel.fromJson(e)).toList();
-  }  
+  }
 }
 
-class Homecontroller {  
+class HomeController {
+  final HomeRepository _homeRepository;
+  HomeController(this._homeRepository);
+  
+  ValueNotifier posts = ValueNotifier([]);
+  
+  fetch() async {
+    posts.value = await _homeRepository.getList();
+  }
 }
-
-// parei no minuto 10:13 do video https://www.youtube.com/watch?v=-5iDptsmWeE

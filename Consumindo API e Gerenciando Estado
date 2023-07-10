@@ -1,0 +1,106 @@
+import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+String exempleJson = '[{"userId": 1, "id": 1, "title": "O Incrivel Mundo de Jack", "body": "Um filme sobre um esqueleto"}]';
+
+void main() {
+  
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  
+  Widget build(BuildContext context) {
+    return MaterialApp(home: HomePage());
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+  
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final HomeController _controller = HomeController(HomeRepositoryMock());
+  
+  @override
+  void initState() {
+    super.initState();
+    _controller.fetch();
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ValueListenableBuilder(
+        valueListenable: _controller.posts,
+        builder: (_, list, child) {
+          return ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (_, index) => ListTile(
+              title: Text(list[index].title),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class PostModel {
+  final int userId;
+  final int id;
+  final String title;
+  final String body;
+  PostModel(this.userId, this.id, this.title, this.body);
+  factory PostModel.fromJson(Map json) {
+    return PostModel(json['userId'], json['id'], json['title'], json['body']);
+  }
+}
+
+abstract class HomeRepository {
+  Future<List<PostModel>> getList();
+}
+
+class HomeRepositoryMock implements HomeRepository {
+  @override
+  Future<List<PostModel>> getList() async {
+    List jsonList = json.decode(exempleJson);
+    return jsonList.map((e) => PostModel.fromJson(e)).toList();
+  }
+}
+
+class HomeController {
+  final HomeRepository _homeRepository;
+  HomeController(this._homeRepository);
+  
+  ValueNotifier posts = ValueNotifier([]);
+  
+  fetch() async {
+    posts.value = await _homeRepository.getList();
+  }
+}
+
+class HomeRepositoryImp implements HomeRepository {
+  @override
+  Future<List<PostModel>> getList() async {
+    var client = http.Client();
+    try {
+      var response = await client.get(
+        Uri.parse('https://jsonplaceholder.typicode.com/posts'),
+      );
+      var decodedResponse = jsonDecode(response.body) as List;
+      posts.value = decodedResponse.map((e) => Post.fromJson(e)).toList();
+      return jsonList.map((e) => PostModel.fromJson(e)).toList();
+    } finally {
+      client.close();
+    }
+    
+    return [];
+  }
+  
+} 

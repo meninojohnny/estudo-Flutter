@@ -1,55 +1,51 @@
 import 'package:flutter/material.dart';
+
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  
   LoginController controller = LoginController();
-  
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => LoginPage(controller: controller),
-        '/homePage': (context) => HomePage(controller: controller),
-      }
-    );
+    return MaterialApp(initialRoute: '/', routes: {
+      '/': (context) => LoginPage(controller: controller),
+      '/homePage': (context) => HomePage(controller: controller),
+    });
   }
 }
 
 class HomePage extends StatelessWidget {
-  
   final LoginController controller;
-  
+
   HomePage({Key? key, required this.controller});
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
-        child: Column(
-          children: [
-            UserAccountsDrawerHeader(
-              currentAccountPicture: Text(controller._email[0].toUpperCase()),
-              accountName: Text('EMAIL: ${controller._email}'),
-              accountEmail: Text('PASS: ${controller._pass}'),
-            ),
-            ListTile(
+        child: Column(children: [
+          UserAccountsDrawerHeader(
+            currentAccountPicture: Text(controller._email[0].toUpperCase()),
+            accountName: Text('EMAIL: ${controller._email}'),
+            accountEmail: Text('PASS: ${controller._pass}'),
+          ),
+          ListTile(
               leading: Icon(Icons.home),
               title: Text('Inicio'),
               subtitle: Text('Tela de inicio'),
-              onTap: () {Navigator.of(context).pushReplacementNamed('/homePage');}
-            ),
-            ListTile(
+              onTap: () {
+                Navigator.of(context).pushReplacementNamed('/homePage');
+              }),
+          ListTile(
               leading: Icon(Icons.person),
               title: Text('Tela de Login'),
               subtitle: Text('Fazer login'),
-              onTap: () {Navigator.of(context).pushReplacementNamed('/');}
-            ),
-          ]
-        ),
+              onTap: () {
+                Navigator.of(context).pushReplacementNamed('/');
+              }),
+        ]),
       ),
       appBar: AppBar(title: Text('Home Page')),
     );
@@ -57,35 +53,29 @@ class HomePage extends StatelessWidget {
 }
 
 class LoginPage extends StatelessWidget {
-  
   final LoginController controller;
-  
+
   LoginPage({Key? key, required this.controller});
-  
+
   Widget _body() {
     return Padding(
-        padding: EdgeInsets.all(15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Card(
-              child: TelaLogin(controller: controller),
-            ),
-          ]
+      padding: EdgeInsets.all(15),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Card(
+          child: TelaLogin(controller: controller),
         ),
-      );
+      ]),
+    );
   }
-  
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Login Page')),
-      body: Stack(
-        children: [
-          Container(color: Colors.grey),
-          _body(),
-        ]
-      ),
+      body: Stack(children: [
+        Container(color: Colors.grey),
+        _body(),
+      ]),
     );
   }
 }
@@ -94,7 +84,11 @@ class CustomTextField extends StatelessWidget {
   final String labelText;
   final bool obscureText;
   final Function(String) onChanged;
-  CustomTextField({Key? key, required this.labelText, required this.onChanged, this.obscureText = false});
+  CustomTextField(
+      {Key? key,
+      required this.labelText,
+      required this.onChanged,
+      this.obscureText = false});
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -108,12 +102,11 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
-class TelaLogin extends StatelessWidget{
-  
+class TelaLogin extends StatelessWidget {
   final LoginController controller;
-  
+
   TelaLogin({Key? key, required this.controller});
-  
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -122,11 +115,18 @@ class TelaLogin extends StatelessWidget{
         children: [
           CustomTextField(labelText: 'Email', onChanged: controller.setEmail),
           SizedBox(height: 10),
-          CustomTextField(labelText: 'Password', onChanged: controller.setPass, obscureText: true),
+          CustomTextField(
+              labelText: 'Password',
+              onChanged: controller.setPass,
+              obscureText: true),
           SizedBox(height: 10),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pushReplacementNamed('/homePage');
+              if (controller._email != '' && controller._pass != '') {
+                Navigator.of(context).pushReplacementNamed('/homePage');
+              } else {
+                print('Preencha os campos vazios');
+              }
             },
             child: Text('Entrar'),
           ),
@@ -135,7 +135,7 @@ class TelaLogin extends StatelessWidget{
     );
   }
 }
-  
+
 class LoginController {
   String _email = '';
   setEmail(String email) => {_email = email};

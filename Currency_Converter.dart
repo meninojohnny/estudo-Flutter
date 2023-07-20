@@ -39,20 +39,27 @@ class HomePageState extends State {
             SizedBox(height: 40),
             Row(children: [
               Expanded(
-                child: CustomDropdown(onChanged: _controller.setToCoin),
+                child: CustomDropdown(
+                  onChanged: (value) {
+                    setState(() {_controller.setToCoin(value);});
+                  },
+                  itemSelected: _controller._toCoin,
+                ),
               ),
               SizedBox(width: 20),
               Expanded(
                 child: TextField(
                   textAlign: TextAlign.center,
-                  onChanged: _controller.setvalueCoin,
+                  onChanged: (value) {
+                    setState(() {_controller.setvalueCoin(value);});
+                  },
                 ),
               ),
             ]),
             Row(children: [
               Expanded(
                 flex: 1,
-                child: CustomDropdown(onChanged: _controller.setFromCoin),
+                child: CustomDropdown(onChanged: _controller.setFromCoin,  itemSelected: _controller._fromCoin),
               ),
               SizedBox(width: 20),
               Expanded(
@@ -69,13 +76,16 @@ class HomePageState extends State {
             SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
-                setState(() {
-                  _controller.convert();
-                });
+                
+                if (_controller._toCoin != '' && _controller._fromCoin != '') {
+                  setState(() {_controller.convert();});
+                } else {
+                  print('Preencha os campos vazios');
+                }
               },
               child: Text('CONVERTER'),
             ),
-          ]), //
+          ]),
         ),
       ),
     );
@@ -97,10 +107,10 @@ class CurrencyModel {
 }
 
 class CurrencyController {
-  String? _toCoin = '';
+  String? _toCoin = 'real';
   setToCoin(String? toCoin) => {_toCoin = toCoin};
 
-  String? _fromCoin = '';
+  String? _fromCoin = 'real';
   setFromCoin(String? fromCoin) => {_fromCoin = fromCoin};
 
   double _valueCoin = 0.0;
@@ -116,14 +126,16 @@ class CurrencyController {
 }
 
 class CustomDropdown extends StatelessWidget {
+  final String? itemSelected;
   final Function(String?) onChanged;
-  CustomDropdown({required this.onChanged});
+  CustomDropdown({required this.onChanged, required this.itemSelected});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 64,
       child: DropdownButton(
+        value: itemSelected,
         isExpanded: true,
         items: [
           DropdownMenuItem<String>(value: 'real', child: Text('Real')),

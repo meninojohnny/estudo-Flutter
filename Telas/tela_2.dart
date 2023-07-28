@@ -16,10 +16,11 @@ class HomePageState extends State {
   PageController _pageController = PageController();
   Texts texts = Texts();
   int totalPages = 4;
+  int initialPage = 0;
 
   @override
   void initState() {
-    _pageController = PageController(initialPage: 3);
+    _pageController = PageController(initialPage: 0);
   }
 
   @override
@@ -32,7 +33,6 @@ class HomePageState extends State {
           makePage(color: Colors.red, page: 2),
           makePage(color: Colors.green, page: 3),
           makePage(color: Colors.orange, page: 4),
-          
         ],
       ),
     ); // Scaffold
@@ -85,10 +85,10 @@ class HomePageState extends State {
                     Text(
                       texts.posts[page - 1]['title'],
                       style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 35,
-                          fontWeight: FontWeight.bold,
-                          height: 1.3,
+                        color: Colors.white,
+                        fontSize: 35,
+                        fontWeight: FontWeight.bold,
+                        height: 1.3,
                       ),
                     ),
                     SizedBox(height: 20),
@@ -137,8 +137,19 @@ class HomePageState extends State {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Text('READ MORE', style: TextStyle(color: Colors.white,),),
+                    Text(
+                      'READ MORE',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                     SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        _pageController.jumpToPage((page != 4) ? page : 0 );
+                      },
+                      child: Text('>', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                    ),
                   ],
                 ), // Column
               ), // Expanded

@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 void main() => runApp(
       MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: '/homePage',
+        initialRoute: '/',
         routes: {
           '/': (context) => StarterPage(),
           '/homePage': (context) => HomePage(),
         },
-        //home: StarterPage(),
       ),
     );
 
@@ -153,28 +152,27 @@ class HomePageState extends State {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 17,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  //SizedBox(height: 10),
                 ],
               ), // Column
             ), // Padding
-            Expanded(
-              child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height, 
-                    child: ListView(
-                      children: [
-                        makeItem(),
-                      ],
-                    ),
-                  ),
+            Container(
+              height: 430,
+              padding: EdgeInsets.all(20),
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  makeItem(color: Colors.red),
+                  makeItem(color: Colors.blue),
+                  makeItem(color: Colors.orange),
+                  makeItem(color: Colors.pink),
+                ],
               ),
             ),
           ],
-        ),
+        ), // Column
       ),
     ); // Scaffold
   }
@@ -197,8 +195,35 @@ class HomePageState extends State {
     );
   }
 
-  Widget makeItem() {
+  Widget makeItem({color}) {
     return Container(
+      padding: EdgeInsets.all(15),
+      margin: EdgeInsets.only(right: 10),
+      width: 300,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Icon(Icons.favorite, color: Colors.white),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start, 
+            children: [
+              Text('\$ 15.00', style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),),
+              SizedBox(height: 8),
+              Text('Vegetarian Pizza', style: TextStyle(color: Colors.white, fontSize: 15),),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

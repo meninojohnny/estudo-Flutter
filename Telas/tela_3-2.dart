@@ -71,7 +71,7 @@ class _StatePageState extends State {
                 onPressed: () {
                   Navigator.of(context).pushReplacementNamed('/homePage');
                 },
-                child: Text('Start'),
+                child: Text('Start', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
               ),
             ),
             SizedBox(height: 20),

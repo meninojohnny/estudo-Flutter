@@ -15,10 +15,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       
       debugShowCheckedModeBanner: false,
-      initialRoute: '/addCardPage',
+      initialRoute: '/',
       routes: {
-        '/': (context) => HomePage(_transitions: _controller),
-        '/addCardPage': (context) => AddCardPage(),
+        '/': (context) => HomePage(transitions: _controller),
+        '/addCardPage': (context) => AddCardPage(transitions: _controller),
       },
     );
   }
@@ -26,16 +26,17 @@ class MyApp extends StatelessWidget {
 
 class HomePage extends StatefulWidget {
   
-  final PersonController _transitions;
-  HomePage({Key? key, required this._transitions});
+  final PersonController transitions;
+  HomePage({Key? key, required this.transitions});
   
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState(transitions: transitions);
 }
 
 class _HomePageState extends State {
-  PersonController _transitions = PersonController();
+  final PersonController transitions;
   int userId = 0;
+  _HomePageState({Key? key, required this.transitions});
 
   @override
   Widget build(BuildContext context) {
@@ -74,11 +75,11 @@ class _HomePageState extends State {
                 height: 200,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: _transitions.cards.length,
+                  itemCount: transitions.cards.length,
                   itemBuilder: (context, index) {
                     return creditCard(
-                      name: _transitions.cards[index]['cardName'],
-                      value: _transitions.cards[index]['currency'],
+                      name: transitions.cards[index]['cardName'],
+                      value: transitions.cards[index]['currency'],
                     );
                   }
                 ), // ListView
@@ -92,13 +93,13 @@ class _HomePageState extends State {
               Container(
                 height: MediaQuery.of(context).size.height,
                 child: ListView.builder(
-                  itemCount: _transitions.transitions[0].length,
+                  itemCount: transitions.transitions[0].length,
                   itemBuilder: (context, index) {
                     return transationsCard(
-                        description: _transitions.transitions[userId][index]
+                        description: transitions.transitions[userId][index]
                             ['description'],
-                        value: _transitions.transitions[userId][index]['value'],
-                        type: _transitions.transitions[userId][index]['type']);
+                        value: transitions.transitions[userId][index]['value'],
+                        type: transitions.transitions[userId][index]['type']);
                   },
                 ),
               ),
@@ -260,13 +261,16 @@ class _HomePageState extends State {
 }
 
 class AddCardPage extends StatefulWidget {
+  final PersonController transitions;
+  AddCardPage({Key? key, required this.transitions});
   @override
-  AddCardPageState createState() => AddCardPageState();
+  AddCardPageState createState() => AddCardPageState(transitions: transitions);
 }
 
 class AddCardPageState extends State {
-  
   CardController _controller = CardController();
+  final PersonController transitions;
+  AddCardPageState({Key? key, required this.transitions});
   
   @override
   Widget build(BuildContext context) {
@@ -277,6 +281,7 @@ class AddCardPageState extends State {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.black, size: 20),
           onPressed: () {
+            
             Navigator.of(context).pop(true);
           },
         ),
@@ -301,7 +306,8 @@ class AddCardPageState extends State {
                 child: MaterialButton(
                   minWidth: double.infinity,
                   onPressed: () {
-                    
+                    transitions.cardAdd(_controller._cardName, _controller._cardNumber, _controller._currency);
+                    Navigator.of(context).pushReplacementNamed('/');
                   },
                   child: Text(
                     'Add',

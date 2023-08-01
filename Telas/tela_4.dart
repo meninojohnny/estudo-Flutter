@@ -18,7 +18,7 @@ class _HomePageState extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -31,19 +31,19 @@ class _HomePageState extends State {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.add,
+              Icons.person,
               color: Colors.black,
             ),
             onPressed: () {},
           ),
         ],
       ), // AppBar
-      body: ListView(
-        children: [
-          Container(
-            color: Colors.white.withOpacity(.8),
-            padding: EdgeInsets.all(20),
-            child: Column(
+      body: Container(
+        color: Colors.white.withOpacity(.9),
+        padding: EdgeInsets.all(20),
+        child: ListView(
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
@@ -51,24 +51,35 @@ class _HomePageState extends State {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
-                      creditCard(name: 'Johnny Vitor', value: 1000, color: Colors.black),
-                      creditCard(name: 'Maluiza Nasci', value: 1000, color: Colors.blue),
-                      creditCard(name: 'Evelyn Cardozo', value: 1000, color: Colors.pink),
+                      creditCard(
+                          name: 'Johnny Vitor',
+                          value: 1000,
+                          color: Colors.black),
+                      creditCard(
+                          name: 'Maluiza Maga',
+                          value: 1500,
+                          color: Colors.blue),
+                      creditCard(
+                          name: 'Evelyn Cardozo',
+                          value: 2000,
+                          color: Colors.pink),
                     ],
-                  ),
-                ),
-                
+                  ), // ListView
+                ), // Container
                 SizedBox(height: 20),
-                Text('Last Transations'),
+                Text(
+                  'Last Transations',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
                 SizedBox(height: 15),
-                cardTransation(description: 'Pix', value: 500, type: '+'),
-                cardTransation(description: 'Shopping', value: 540, type: '-'),
-                cardTransation(description: 'Salary', value: 1300, type: '+'),
-                cardTransation(description: 'Burguer', value: 67, type: '-'),
+                transationsCard(description: 'Shopping', value: 150, type: '-'),
+                transationsCard(description: 'Pix', value: 200, type: '+'),
+                transationsCard(description: 'Buguer', value: 50, type: '-'),
+                transationsCard(description: 'Salary', value: 1300, type: '+'),
               ],
             ), // Column
-          ), // Container
-        ],
+          ],
+        ),
       ),
     ); //Scaffold
   }
@@ -79,7 +90,7 @@ class _HomePageState extends State {
       child: AspectRatio(
         aspectRatio: 3.1 / 2,
         child: GestureDetector(
-          onTap: () {print('Olá ${name}');},
+          onTap: () {},
           child: Container(
             margin: EdgeInsets.only(right: 10),
             decoration: BoxDecoration(
@@ -172,12 +183,12 @@ class _HomePageState extends State {
     ); // Container
   }
 
-  Widget cardTransation({description, value, type}) {
+  Widget transationsCard({description, value, type}) {
     return Container(
-      padding: EdgeInsets.all(13),
+      padding: EdgeInsets.all(12),
       margin: EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white.withOpacity(.9),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Row(
@@ -186,9 +197,8 @@ class _HomePageState extends State {
           Row(
             children: [
               Icon(
-                type == '+' ? (Icons.arrow_upward) : (Icons.arrow_downward),
+                type == '+' ? Icons.arrow_upward : Icons.arrow_downward,
                 color: type == '+' ? Colors.green : Colors.red,
-                
               ),
               SizedBox(width: 10),
               Text(
@@ -196,7 +206,7 @@ class _HomePageState extends State {
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
             ],
-          ),
+          ), // Row
           Row(
             children: [
               Text(
@@ -205,15 +215,12 @@ class _HomePageState extends State {
               ),
               Text(
                 ' US',
-                style: TextStyle(
-                  fontSize: 12,
-                ),
+                style: TextStyle(fontSize: 10),
               ),
             ],
           ),
         ],
-      ),
-    );
+      ), // Row
+    ); // Container
   }
 }
-

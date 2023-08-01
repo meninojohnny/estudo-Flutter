@@ -105,6 +105,7 @@ class _HomePageState extends State {
   }
 
   Widget creditCard({name, value, color, id}) {
+    bool desabilited = userId == id ? false : true;
     return Container(
       height: 210,
       child: AspectRatio(
@@ -117,6 +118,7 @@ class _HomePageState extends State {
             margin: EdgeInsets.only(right: 10),
             decoration: BoxDecoration(
               color: color,
+              border: desabilited ? null : Border.all(width: 4, color: Colors.green),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Container(

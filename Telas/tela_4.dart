@@ -15,6 +15,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State {
+  PersonsTransitions _transitions = PersonsTransitions();
+  int userId = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,15 +57,19 @@ class _HomePageState extends State {
                       creditCard(
                           name: 'Johnny Vitor',
                           value: 1000,
-                          color: Colors.black),
+                          color: Colors.black,
+                          id: 0,
+                      ),
                       creditCard(
                           name: 'Maluiza Maga',
                           value: 1500,
-                          color: Colors.blue),
+                          color: Colors.blue, id: 1,
+                      ),
                       creditCard(
                           name: 'Evelyn Cardozo',
                           value: 2000,
-                          color: Colors.pink),
+                          color: Colors.pink, id: 2,
+                      ),
                     ],
                   ), // ListView
                 ), // Container
@@ -72,10 +79,23 @@ class _HomePageState extends State {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
                 SizedBox(height: 15),
-                transationsCard(description: 'Shopping', value: 150, type: '-'),
-                transationsCard(description: 'Pix', value: 200, type: '+'),
-                transationsCard(description: 'Buguer', value: 50, type: '-'),
-                transationsCard(description: 'Salary', value: 1300, type: '+'),
+//                 transationsCard(description: 'Shopping', value: 150, type: '-'),
+//                 transationsCard(description: 'Pix', value: 200, type: '+'),
+//                 transationsCard(description: 'Burguer', value: 50, type: '-'),
+//                 transationsCard(description: 'Salary', value: 1300, type: '+'),
+
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: ListView.builder(
+                    itemCount: _transitions.transitions[0].length,
+                    itemBuilder: (context, index) {
+                      return transationsCard(
+                          description: _transitions.transitions[userId][index]['description'],
+                          value: _transitions.transitions[userId][index]['value'],
+                          type: _transitions.transitions[userId][index]['type']);
+                    },
+                  ),
+                ),
               ],
             ), // Column
           ],
@@ -84,13 +104,15 @@ class _HomePageState extends State {
     ); //Scaffold
   }
 
-  Widget creditCard({name, value, color}) {
+  Widget creditCard({name, value, color, id}) {
     return Container(
       height: 210,
       child: AspectRatio(
         aspectRatio: 3.1 / 2,
         child: GestureDetector(
-          onTap: () {},
+          onTap: () {
+            setState(() {userId = id;});
+          },
           child: Container(
             margin: EdgeInsets.only(right: 10),
             decoration: BoxDecoration(
@@ -223,4 +245,25 @@ class _HomePageState extends State {
       ), // Row
     ); // Container
   }
+}
+
+class PersonsTransitions {
+  List transitions = [
+    
+    [{'description': 'Shopping', 'value': 150, 'type': '-'},
+    {'description': 'Pix', 'value': 500, 'type': '+'},
+    {'description': 'Burguer', 'value': 50, 'type': '-'},
+    {'description': 'Salary', 'value': 1500, 'type': '+'}],
+    
+    [{'description': 'Make', 'value': 150, 'type': '-'},
+    {'description': 'Salary', 'value': 500, 'type': '+'},
+    {'description': 'Pizza', 'value': 50, 'type': '-'},
+    {'description': 'PetShop', 'value': 1500, 'type': '+'}],
+    
+    [{'description': 'Bike', 'value': 150, 'type': '-'},
+    {'description': 'Salary', 'value': 500, 'type': '+'},
+    {'description': 'Sorvet', 'value': 50, 'type': '-'},
+    {'description': 'Place', 'value': 1500, 'type': '+'}],
+    
+  ];
 }

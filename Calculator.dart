@@ -38,13 +38,13 @@ class _HomePageState extends State {
                 Container(
                   width: double.infinity, 
                   height: 125, 
-                  color: Colors.orange,
+                  //color: Colors.orange,
                   child: Align(
                     alignment: Alignment.bottomRight,
                     child: SingleChildScrollView(
                       child: Text(
                         _controller.numberView == '' ? '0' : _controller.numberView,
-                        style: TextStyle(fontSize: 40),
+                        style: TextStyle(fontSize: 40, color: Colors.white),
                       ),
                     ),
                   ),

@@ -43,7 +43,7 @@ class _HomePageState extends State {
                     alignment: Alignment.bottomRight,
                     child: SingleChildScrollView(
                       child: Text(
-                        _controller.number1 == '' ? '0' : _controller.number1,
+                        _controller.numberView == '' ? '0' : _controller.numberView,
                         style: TextStyle(fontSize: 40),
                       ),
                     ),
@@ -116,10 +116,74 @@ class _HomePageState extends State {
   }
   
   Widget customBottom({isZero = false, isUp = false, color, text}) {
+    List numbers = ['1', '2', '3', '4', '5', '6', '7', '8','9', '0'];
+    List operations = ['+', '-', '/'];
     return GestureDetector(
       onTap: () {
         setState(() {
-          _controller.number1 += text;
+          if (numbers.contains(text)) {
+            print(_controller.add);
+            
+            if (_controller.igual == true) {
+              _controller.igual = false;
+              _controller.numberView = '';
+            }
+            
+            _controller.numberView += text;
+            
+          } else if (text == 'AC') {
+            _controller.numberView = '';
+          } else if (operations.contains(text)) {
+            
+            _controller.number1 = _controller.numberView;
+            _controller.numberView = '';
+            
+            if (text == '+') {
+              _controller.add == true;
+              _controller.sub == false;
+              _controller.mul == false;
+              _controller.div == false;
+              
+            } else if (text == '-') {
+              _controller.add == false;
+              _controller.sub == true;
+              _controller.mul == false;
+              _controller.div == false;
+              
+            } else if (text == 'x') {
+              _controller.add == false;
+              _controller.sub == false;
+              _controller.mul == true;
+              _controller.div == false;
+              
+            } else if (text == '/') {
+              _controller.add == false;
+              _controller.sub == false;
+              _controller.mul == false;
+              _controller.div == true;
+            } 
+            
+          } else if (text == '=') {
+            _controller.igual = true;
+            _controller.number2 = _controller.numberView;
+            
+            if (_controller.number1 != '') {
+                if (_controller.add == true) {
+                _controller.numberView = '${int.parse(_controller.number1) + int.parse(_controller.number2)}';
+              } else if (_controller.sub == true) {
+                _controller.numberView = '${int.parse(_controller.number1) - int.parse(_controller.number2)}';
+              } else if (_controller.mul == true) {
+                _controller.numberView = '${int.parse(_controller.number1) * int.parse(_controller.number2)}';
+              } else if (_controller.div == true) {
+                _controller.numberView = '${int.parse(_controller.number1) / int.parse(_controller.number2)}';
+              }
+            } 
+            
+            
+            
+            
+          }
+          
         });
       },
       child: Container(
@@ -136,5 +200,13 @@ class _HomePageState extends State {
 }
 
 class CalculatorController {
+  String numberView = '';
   String number1 = '';
+  String number2 = '';
+  bool add = true;
+  bool sub = true;
+  bool mul = true;
+  bool div = true;
+  bool igual = false;
+  
 }

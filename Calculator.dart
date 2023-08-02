@@ -100,14 +100,17 @@ class _HomePageState extends State {
   }
   
   Widget customBottom({isZero = false, isUp = false, color, text}) {
-    return Container(
-      width: isZero ? 80 : 37,
-      height: 37,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(50),
+    return GestureDetector(
+      onTap: () {print(text);},
+      child: Container(
+        width: isZero ? 80 : 37,
+        height: 37,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: Center(child: Text(text, style: TextStyle(color: isUp ? Colors.black : Colors.white, fontWeight: FontWeight.bold),),),
       ),
-      child: Center(child: Text(text, style: TextStyle(color: isUp ? Colors.black : Colors.white, fontWeight: FontWeight.bold),),),
     );
   }
   

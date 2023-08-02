@@ -13,6 +13,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State {
+  
+  CalculatorController _controller = CalculatorController();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +35,20 @@ class _HomePageState extends State {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(width: double.infinity, height: 125, color: Colors.orange),
+                Container(
+                  width: double.infinity, 
+                  height: 125, 
+                  color: Colors.orange,
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: SingleChildScrollView(
+                      child: Text(
+                        _controller.number1 == '' ? '0' : _controller.number1,
+                        style: TextStyle(fontSize: 40),
+                      ),
+                    ),
+                  ),
+                ), // Containe1
                 Container(
                   width: double.infinity, 
                   height: 200,
@@ -90,7 +106,7 @@ class _HomePageState extends State {
                       
                     ],
                   ),
-                ),
+                ), // Containe2
               ],
             ),
           ), // Container
@@ -101,7 +117,11 @@ class _HomePageState extends State {
   
   Widget customBottom({isZero = false, isUp = false, color, text}) {
     return GestureDetector(
-      onTap: () {print(text);},
+      onTap: () {
+        setState(() {
+          _controller.number1 += text;
+        });
+      },
       child: Container(
         width: isZero ? 80 : 37,
         height: 37,
@@ -113,5 +133,8 @@ class _HomePageState extends State {
       ),
     );
   }
-  
+}
+
+class CalculatorController {
+  String number1 = '';
 }

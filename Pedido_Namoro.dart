@@ -4,7 +4,11 @@ import 'dart:math';
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: HomePage(),
+    initialRoute: '/',
+    routes: {
+      '/': (context) => HomePage(),
+      '/yesPage': (context) => YesPage(),
+    },
   ));
 }
 
@@ -14,7 +18,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State {
-  var box = Box1();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,7 @@ class _HomePageState extends State {
             color: Colors.blue,
             borderRadius: BorderRadius.circular(20),
           ),
-          child: box,
+          child: Box1(),
         ),
       ),
     );
@@ -41,17 +44,12 @@ class Box1 extends StatefulWidget {
 
 class _Box1State extends State {
   double value1 = 170;
-  double value2 = 80;
+  double value2 = 95;
 
   @override
   Widget build(BuildContext contexte) {
     return Container(
-      child: Stack(
-        children: [
-          Container(
-            height: 250,
-            width: 250,
-            child: Image.network('https://lh3.googleusercontent.com/mUuQy1PsIC2Mq1_ZGlUYP2pgY65qmMuNop5Ts1aKbWyMxNSrI8AEBdE-u26nnDDaAek'),),
+      child: 
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -72,23 +70,59 @@ class _Box1State extends State {
                   child: Container(
                     height: 30,
                     width: 50,
-                    color: Colors.green,
+                    
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    child: Center(child: Text('Não')),
                   ),
                 ),
               ), // Transform
+              
+              Transform.translate(
+                offset: Offset(50, 0),
+                child: Container(child: Text('Quer namorar comigo?'),),
+              ),
+              
 
               Transform.translate(
                 offset: Offset(30, 50),
-                child: Container(
-                  height: 30,
-                  width: 50,
-                  color: Colors.red,
-                ), //Container2
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushReplacementNamed('/yesPage');
+                  },
+                  child: Container(
+                    height: 30,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    child: Center(child: Text('Sim')),
+                  ), //Container2
+                ),
               ),
             ],
           ),
-        ],
+    );
+  }
+}
+
+class YesPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+      child: Container(
+        height: 250,
+        width: 250,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.blue,
+        ),
       ),
+    )
     );
   }
 }

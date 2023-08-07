@@ -122,7 +122,6 @@ class _HomePageState extends State {
       onTap: () {
         setState(() {
           if (numbers.contains(text)) {
-            print(_controller.add);
             
             if (_controller.igual == true) {
               _controller.igual = false;

@@ -20,6 +20,48 @@ class _HomePageState extends State {
 
   Map coordCobra = {'top': 0, 'left': 0};
   Map coordComida = {'top': 100, 'left': 100};
+  //Future direction = Future.delayed(Duration(seconds: 1));
+
+  bool _down = false;
+  bool _up = false;
+  bool _left = false;
+  bool _right = false;
+
+  Future<void> up() async {
+    while (_up) {
+      await Future.delayed(Duration(seconds: 1));
+      setState(() {
+        coordCobra['top'] -= 10;
+      });
+    }
+  }
+
+  Future<void> down() async {
+    while (_down) {
+      await Future.delayed(Duration(seconds: 1));
+      setState(() {
+        coordCobra['top'] += 10;
+      });
+    }
+  }
+
+  Future<void> left() async {
+    while (_left) {
+      await Future.delayed(Duration(seconds: 1));
+      setState(() {
+        coordCobra['left'] -= 10;
+      });
+    }
+  }
+
+  Future<void> right() async {
+    while (_right) {
+      await Future.delayed(Duration(seconds: 1));
+      setState(() {
+        coordCobra['left'] += 10;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,13 +93,14 @@ class _HomePageState extends State {
                       // UP
                       onTap: () {
                         setState(() {
-                          
                           if (coordCobra['top'] > 0) {
-                            coordCobra['top'] -= 10;
-                          }   
-                          
+                            _up = true;
+                            _down = false;
+                            _left = false;
+                            _right = false;
+                            up();
+                          }
                         });
-
                       },
                       child: Container(
                         height: 40,
@@ -81,7 +124,11 @@ class _HomePageState extends State {
                           onTap: () {
                             setState(() {
                               if (coordCobra['left'] > 0) {
-                                coordCobra['left'] -= 10;
+                                _up = false;
+                                _down = false;
+                                _left = true;
+                                _right = false;
+                                left();
                               }
                             });
                           },
@@ -102,12 +149,13 @@ class _HomePageState extends State {
                         GestureDetector(
                           // DOWN
                           onTap: () {
-                            if (coordCobra == coordComida) {
-                              print('pegou');
-                            }
                             setState(() {
                               if (coordCobra['top'] < 415) {
-                                coordCobra['top'] += 10;
+                                _up = false;
+                                _down = true;
+                                _left = false;
+                                _right = false;
+                                down();
                               }
                             });
                           },
@@ -131,7 +179,11 @@ class _HomePageState extends State {
                             setState(() {
                               if (coordCobra['left'] <
                                   MediaQuery.of(context).size.width) {
-                                coordCobra['left'] += 10;
+                                _up = false;
+                                _down = false;
+                                _left = false;
+                                _right = true;
+                                right();
                               }
                             });
                           },
@@ -188,24 +240,19 @@ class _HomePageState extends State {
 class GameController {
   double top = 0;
   double left = 0;
-  
+
   void gerarPosi() {
-      top = Random().nextInt(20) * 10;
-      left = Random().nextInt(20) * 10;
+    top = Random().nextInt(20) * 10;
+    left = Random().nextInt(20) * 10;
   }
-  
+
   bool verificar(Map cobra, Map comida) {
-    if (cobra['top'] == (comida['top'] + 10) && cobra['left'] == comida['left']) {
+    if (cobra['top'] == (comida['top'] + 10) &&
+        cobra['left'] == comida['left']) {
       gerarPosi();
       return true;
     } else {
       return false;
     }
   }
-  
-  
 }
-  
-  
-  
-  

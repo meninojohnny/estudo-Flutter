@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 void main() {
   runApp(
@@ -15,26 +16,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State {
-  double top = 0;
-  double left = 0;
-  
+  GameController controller = GameController();
+
   Map coordCobra = {'top': 0, 'left': 0};
-  Map coordComida = {'top': 0, 'left': 0};
+  Map coordComida = {'top': 100, 'left': 100};
 
   @override
   Widget build(BuildContext context) {
+    if (controller.verificar(coordCobra, coordComida)) {
+      setState(() {
+        controller.gerarPosi();
+        coordComida['top'] = controller.top;
+        coordComida['left'] = controller.left;
+      });
+    }
     return Scaffold(
       backgroundColor: Colors.blue,
       body: Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
             cobra(),
-            
             comida(),
-            
-            
             Transform.translate(
               offset: Offset(0, 415),
               child: Container(
@@ -48,11 +51,13 @@ class _HomePageState extends State {
                       // UP
                       onTap: () {
                         setState(() {
+                          
                           if (coordCobra['top'] > 0) {
                             coordCobra['top'] -= 10;
-                          }
+                          }   
                           
                         });
+
                       },
                       child: Container(
                         height: 40,
@@ -78,7 +83,6 @@ class _HomePageState extends State {
                               if (coordCobra['left'] > 0) {
                                 coordCobra['left'] -= 10;
                               }
-                              
                             });
                           },
                           child: Container(
@@ -98,11 +102,13 @@ class _HomePageState extends State {
                         GestureDetector(
                           // DOWN
                           onTap: () {
+                            if (coordCobra == coordComida) {
+                              print('pegou');
+                            }
                             setState(() {
                               if (coordCobra['top'] < 415) {
                                 coordCobra['top'] += 10;
                               }
-                              
                             });
                           },
                           child: Container(
@@ -123,10 +129,10 @@ class _HomePageState extends State {
                           // RIGHT
                           onTap: () {
                             setState(() {
-                              if (coordCobra['left'] < MediaQuery.of(context).size.width) {
+                              if (coordCobra['left'] <
+                                  MediaQuery.of(context).size.width) {
                                 coordCobra['left'] += 10;
                               }
-                              
                             });
                           },
                           child: Container(
@@ -153,27 +159,53 @@ class _HomePageState extends State {
       ),
     ); // Scaffold
   }
-  
+
   Widget cobra() {
-    return Transform.translate( // Cobra
-              offset: Offset(coordCobra['left'], coordCobra['top']),
-              child: Container(
-                height: 10,
-                width: 10,
-                color: Colors.black,
-              ),
-            );
+    return Transform.translate(
+      // Cobra
+      offset: Offset(coordCobra['left'], coordCobra['top']),
+      child: Container(
+        height: 10,
+        width: 10,
+        color: Colors.black,
+      ),
+    );
+  }
+
+  Widget comida() {
+    return Transform.translate(
+      // Cobra
+      offset: Offset(coordComida['left'], coordComida['top']),
+      child: Container(
+        height: 10,
+        width: 10,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+class GameController {
+  double top = 0;
+  double left = 0;
+  
+  void gerarPosi() {
+      top = Random().nextInt(20) * 10;
+      left = Random().nextInt(20) * 10;
   }
   
-  Widget comida() {
-    return Transform.translate( // Cobra
-              offset: Offset(coordComida['left'], coordComida['top']),
-              child: Container(
-                height: 10,
-                width: 10,
-                color: Colors.white,
-              ),
-            );
+  bool verificar(Map cobra, Map comida) {
+    if (cobra['top'] == (comida['top'] + 10) && cobra['left'] == comida['left']) {
+      gerarPosi();
+      return true;
+    } else {
+      return false;
+    }
   }
+  
   
 }
+  
+  
+  
+  

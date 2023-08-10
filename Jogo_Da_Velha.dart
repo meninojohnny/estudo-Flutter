@@ -43,6 +43,13 @@ class _HomePageState extends State {
               ],
             ),
           ), // Container
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {controller.reset();});
+            },
+            child: Text('Reset'),
+          ),
         ],
       ), // Column
     ); // Scaffold
@@ -131,6 +138,15 @@ class GameController {
       return true;
     } else {
       return false;
+    }
+  }
+  
+  void reset() {
+    count = 0;
+    for (int i = 0;i< game.length; i++) {
+      for (int j = 0;j < game[i].length;j++) {
+        game[i][j]['value'] = '';
+      }
     }
   }
   

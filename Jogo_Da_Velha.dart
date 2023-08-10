@@ -83,7 +83,7 @@ class _HomePageState extends State {
     return GestureDetector(
       onTap: () {
         setState(() {
-          controller.start(index);
+          controller.start2(index);
         });
       },
       child: Container(
@@ -107,6 +107,8 @@ class GameController {
   bool startStatus = true;
   String status = '';
   int count = 0;
+  int count2 = 1;
+  bool modeOnly = false;
   List game = [
     [
       {'value': '', 'index': 1},
@@ -137,6 +139,20 @@ class GameController {
       }
     }
   } // setValue
+  
+  setValue2(int index) {
+    for (int i = 0; i < game.length; i++) {
+      for (int j = 0; j < game[i].length; j++) {
+        if (game[i][j]['index'] == index) {
+          if (verify(i, j)) {
+            game[i][j]['value'] = (count2 % 2 == 0) ? 'O' : 'X';
+            count++;
+            count2++;
+          }
+        }
+      }
+    }
+  } // setValue
 
   void start(int index) {
     if (startStatus) {
@@ -147,6 +163,11 @@ class GameController {
       player();
       winer();
     }
+  }
+  
+  void start2(int index) {
+    setValue2(index);
+    winer();
   }
 
   void player() {
@@ -215,18 +236,36 @@ class GameController {
       [2, 4, 6]
     ];
 
-    for (final i in pecas) {
-      for (final j in jogadas) {
-        if (game2[j[0]] == i &&
-            game2[j[0]] == game2[j[1]] &&
-            game2[j[1]] == game2[j[2]]) {
-          status = (i == 'X') ? 'You Win' : 'You Lose';
-          startStatus = false;
-        } else if (count == 9 && startStatus == true) {
-          status = 'Tied';
-          startStatus = false;
+    
+    if (modeOnly) {
+        for (final i in pecas) {
+        for (final j in jogadas) {
+          if (game2[j[0]] == i &&
+              game2[j[0]] == game2[j[1]] &&
+              game2[j[1]] == game2[j[2]]) {
+            status = (i == 'X') ? 'You Win' : 'You Lose';
+            startStatus = false;
+          } else if (count == 9 && startStatus == true) {
+            status = 'Tied';
+            startStatus = false;
+          }
         }
       }
-    }
+    } else {
+        for (final i in pecas) {
+          for (final j in jogadas) {
+            if (game2[j[0]] == i &&
+                game2[j[0]] == game2[j[1]] &&
+                game2[j[1]] == game2[j[2]]) {
+              status = (i == 'X') ? 'Player 1 Win' : 'Player 2 Win';
+              startStatus = false;
+            } else if (count == 9 && startStatus == true) {
+              status = 'Tied';
+              startStatus = false;
+            }
+          }
+        }
+      }
+      
   }
 }

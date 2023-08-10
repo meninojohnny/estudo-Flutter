@@ -3,20 +3,69 @@ import 'dart:math';
 
 void main() {
   runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    ),
+    MyApp(),
   ); // runApp
 }
 
-class HomePage extends StatefulWidget {
+class MyApp extends StatelessWidget {
+  GameController controller = GameController();
   @override
-  _HomePageState createState() => _HomePageState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/',
+        routes: {
+          '/': (context) => GamePage(controller: controller),
+          '/homePage': (context) => HomePage(controller: controller),
+        });
+  }
+}
+
+class GamePage extends StatelessWidget {
+  final GameController controller;
+  GamePage({Key? key, required this.controller});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        child: Center(
+          child: Column(
+            children: [
+              SizedBox(height: 50),
+              ElevatedButton(
+                onPressed: () {
+                  controller.setMode(true);
+                  Navigator.of(context).pushReplacementNamed('/homePage');
+                },
+                child: Text('1 Player'),
+              ), // ElevatedButton
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  controller.setMode(false);
+                  Navigator.of(context).pushReplacementNamed('/homePage');
+                },
+                child: Text('2 Players'),
+              ), // ElevatedButton
+            ],
+          ), // Column
+        ), // Center
+      ), // Container
+    ); // Scaffold
+  }
+}
+
+class HomePage extends StatefulWidget {
+  final GameController controller;
+  HomePage({Key? key, required this.controller});
+
+  @override
+  _HomePageState createState() => _HomePageState(controller: controller);
 }
 
 class _HomePageState extends State {
-  GameController controller = GameController();
+  final GameController controller;
+  _HomePageState({Key? key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +111,14 @@ class _HomePageState extends State {
             },
             child: Text('Reset'),
           ), // ElevatedButton
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed('/');
+              controller.reset();
+            },
+            child: Text('Change Mode'),
+          ),
         ],
       ), // Column
     ); // Scaffold
@@ -83,7 +140,7 @@ class _HomePageState extends State {
     return GestureDetector(
       onTap: () {
         setState(() {
-          controller.start2(index);
+          controller.start(index);
         });
       },
       child: Container(
@@ -109,6 +166,11 @@ class GameController {
   int count = 0;
   int count2 = 1;
   bool modeOnly = false;
+
+  setMode(bool mode) {
+    modeOnly = mode;
+  }
+
   List game = [
     [
       {'value': '', 'index': 1},
@@ -139,7 +201,7 @@ class GameController {
       }
     }
   } // setValue
-  
+
   setValue2(int index) {
     for (int i = 0; i < game.length; i++) {
       for (int j = 0; j < game[i].length; j++) {
@@ -155,19 +217,21 @@ class GameController {
   } // setValue
 
   void start(int index) {
-    if (startStatus) {
-      setValue(index);
-      winer();
+    if (modeOnly) {
+      if (startStatus) {
+        setValue(index);
+        winer();
+      }
+      if (startStatus) {
+        player();
+        winer();
+      }
+    } else {
+      if (startStatus) {
+        setValue2(index);
+        winer();
+      }
     }
-    if (startStatus) {
-      player();
-      winer();
-    }
-  }
-  
-  void start2(int index) {
-    setValue2(index);
-    winer();
   }
 
   void player() {
@@ -201,6 +265,7 @@ class GameController {
 
   void reset() {
     count = 0;
+    count2 = 1;
     status = '';
     startStatus = true;
 
@@ -236,9 +301,8 @@ class GameController {
       [2, 4, 6]
     ];
 
-    
     if (modeOnly) {
-        for (final i in pecas) {
+      for (final i in pecas) {
         for (final j in jogadas) {
           if (game2[j[0]] == i &&
               game2[j[0]] == game2[j[1]] &&
@@ -252,20 +316,19 @@ class GameController {
         }
       }
     } else {
-        for (final i in pecas) {
-          for (final j in jogadas) {
-            if (game2[j[0]] == i &&
-                game2[j[0]] == game2[j[1]] &&
-                game2[j[1]] == game2[j[2]]) {
-              status = (i == 'X') ? 'Player 1 Win' : 'Player 2 Win';
-              startStatus = false;
-            } else if (count == 9 && startStatus == true) {
-              status = 'Tied';
-              startStatus = false;
-            }
+      for (final i in pecas) {
+        for (final j in jogadas) {
+          if (game2[j[0]] == i &&
+              game2[j[0]] == game2[j[1]] &&
+              game2[j[1]] == game2[j[2]]) {
+            status = (i == 'X') ? 'Player 1 Win' : 'Player 2 Win';
+            startStatus = false;
+          } else if (count == 9 && startStatus == true) {
+            status = 'Tied';
+            startStatus = false;
           }
         }
       }
-      
+    }
   }
 }

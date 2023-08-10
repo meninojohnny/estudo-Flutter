@@ -65,6 +65,7 @@ class _HomePageState extends State {
       onTap: () {
         setState(() {
           controller.setValue(index);
+          
         });
       },
       child: Container(
@@ -131,12 +132,6 @@ class GameController {
     } else {
       return false;
     }
-  }
-  
-  Future sleep() async {
-    await Future.delayed(Duration(seconds: 1)).then((value) {
-      player();
-    });
   }
   
 }

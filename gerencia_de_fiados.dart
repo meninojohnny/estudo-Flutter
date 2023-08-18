@@ -111,7 +111,8 @@ class _HomePageState extends State<HomePage> {
       onTap: () {
         setState(() {
           setEvent(event);
-          Navigator.of(context).pushReplacementNamed('/eventPage');
+          //Navigator.of(context).pushReplacementNamed('/eventPage');
+          Navigator.of(context).pushNamed('/eventPage');
         });
       },
       child: Container(
@@ -153,18 +154,6 @@ class _EventPageState extends State<EventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: Icon(Icons.arrow_circle_left),
-            onPressed: () {
-              setState(() {
-                Navigator.of(context).pushReplacementNamed('/');
-              });
-            }
-          ),
-        ],
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(20),

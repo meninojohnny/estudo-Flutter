@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     event = eventsController.events[0];
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/eventPage',
+      initialRoute: '/',
       routes: {
         '/': (context) => HomePage(eventsController: eventsController, setEvent: setEvent),
         '/eventPage': (context) => EventPage(event: event),
@@ -145,10 +145,26 @@ class EventPage extends StatefulWidget {
 
 class _EventPageState extends State<EventPage> {
   final EventModel event;
+  String name = '';
+  setName(String name) {this.name = name;}
+  String value = '';
+  setValue(String value) {this.value = value;}
   _EventPageState({Key? key, required this.event});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(Icons.arrow_circle_left),
+            onPressed: () {
+              setState(() {
+                Navigator.of(context).pushReplacementNamed('/');
+              });
+            }
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(20),
@@ -165,7 +181,7 @@ class _EventPageState extends State<EventPage> {
                     width: 100,
                     color: Colors.grey,
                     child: TextField(
-//                       onChanged: setName,
+                      onChanged: setName,
                     ),
                   ),
                   SizedBox(width: 10),
@@ -173,14 +189,14 @@ class _EventPageState extends State<EventPage> {
                     width: 60,
                     color: Colors.red,
                     child: TextField(
-//                       onChanged: setDate,
+                      onChanged: setValue,
                     ),
                   ),
                   SizedBox(width: 10),
                   GestureDetector(
                     onTap: () {
                       setState(() {
-//                         eventsController.addEvent(name: name, date: date);
+                        event.addPeople(name: name, value: value);
                       });
                     },
                     child: Container(
@@ -218,7 +234,7 @@ class _EventPageState extends State<EventPage> {
         borderRadius: BorderRadius.circular(10),
         color: Colors.blue,
       ),
-      child: Text('${people['name']} R\$ ${people['name']}'),
+      child: Text('${people.name} R\$${people.value}'),
     ); // Container
   }
 }
@@ -240,7 +256,7 @@ class EventsController {
 class EventModel {
   final String name;
   final String date;
-  List listPeoples = [];
+  List listPeoples = [PeopleModel(name: 'Joao vitor', value: '100.00')];
   
   EventModel({required this.name, required this.date});
   

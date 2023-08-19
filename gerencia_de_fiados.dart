@@ -49,39 +49,7 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.all(20),
           child: Column(
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 100,
-                    color: Colors.grey,
-                    child: TextField(
-                      onChanged: setName,
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Container(
-                    width: 60,
-                    color: Colors.red,
-                    child: TextField(
-                      onChanged: setDate,
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        eventsController.addEvent(name: name, date: date);
-                      });
-                    },
-                    child: Container(
-                      width: 30,
-                      height: 30,
-                      color: Colors.blue,
-                    ), // Container
-                  ), // GestureDetector
-                 
-                ],
-              ), // Row
+              CustomTextField(onPressed: eventsController.addEvent),
               SizedBox(height: 10),
               
               Text(
@@ -238,7 +206,7 @@ class EventsController {
   ];
   
   void addEvent({name, date}) {
-    events.add(EventModel(name: name, date: date));
+    events.insert(0, EventModel(name: name, date: date));
   }
 }
 
@@ -258,4 +226,75 @@ class PeopleModel {
   final String name;
   final String value;
   PeopleModel({required this.name, required this.value});
+}
+
+class CustomTextField extends StatefulWidget {
+  final Function onPressed;
+  CustomTextField({Key? key, required this.onPressed});
+  @override 
+  _CustomTextField createState() => _CustomTextField(onPressed: onPressed);
+}
+
+class _CustomTextField extends State {
+  String value1 = '';
+  setValue1(String value1) {this.value1 = value1;}
+  String value2 = '';
+  setValue2(String value2) {this.value2 = value2;}
+  final Function onPressed;
+  
+  _CustomTextField({Key? key, required this.onPressed});
+  
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 100,
+          height: 30,
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: TextField(
+            onChanged: setValue1,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+            ), // InputDecoration
+          ),
+        ), // Container
+        SizedBox(width: 10),
+        Container(
+          width: 60,
+          height: 30,
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: TextField(
+            onChanged: setValue1,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+            ), // InputDecoration
+          ),
+        ), // Container
+        SizedBox(width: 10),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              onPressed(value1, value2);
+            });
+          },
+          child: Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              shape: BoxShape.circle,
+            ), // BoxDecoration
+            child: Icon(Icons.add, color: Colors.white),
+          ), // Container
+        ), // GestureDetector
+      ],
+    ); // Row;
+  }
 }

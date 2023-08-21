@@ -49,7 +49,13 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.all(20),
           child: Column(
             children: [
-              CustomTextField(onPressed: eventsController.addEvent),
+              CustomTextField(
+                setValue1: setName, 
+                setValue2: setDate, 
+                onPressed: () {
+                  eventsController.addEvent(name: name, date: date);
+                } 
+              ),
               SizedBox(height: 10),
               
               Text(
@@ -199,10 +205,6 @@ class _EventPageState extends State<EventPage> {
 class EventsController {
   List events = [
     EventModel(name: 'Venda de lanches', date: '13/06'),
-//     {'name': 'Venda de cachorro quente', 'date': '13/07', 'listPeoples': []},
-//     {'name': 'Venda de pastel', 'date': '20/08', 'listPeoples': []},
-//     {'name': 'Venda de bolo', 'date': '15/09', 'listPeoples': []},
-//     {'name': 'Venda de torta', 'date': '31/10', 'listPeoples': []},
   ];
   
   void addEvent({name, date}) {
@@ -229,20 +231,21 @@ class PeopleModel {
 }
 
 class CustomTextField extends StatefulWidget {
-  final Function onPressed;
-  CustomTextField({Key? key, required this.onPressed});
+  final void Function()? onPressed;
+  final Function(String) setValue1;
+  final Function(String) setValue2;
+  
+  CustomTextField({Key? key, required this.onPressed, required this.setValue1, required this.setValue2});
   @override 
-  _CustomTextField createState() => _CustomTextField(onPressed: onPressed);
+  _CustomTextField createState() => _CustomTextField(onPressed: onPressed, setValue1: setValue1, setValue2: setValue2);
 }
 
 class _CustomTextField extends State {
-  String value1 = '';
-  setValue1(String value1) {this.value1 = value1;}
-  String value2 = '';
-  setValue2(String value2) {this.value2 = value2;}
-  final Function onPressed;
+  final Function(String) setValue1;
+  final Function(String) setValue2;
+  final void Function()? onPressed;
   
-  _CustomTextField({Key? key, required this.onPressed});
+  _CustomTextField({Key? key, required this.onPressed, required this.setValue1, required this.setValue2});
   
   @override
   Widget build(BuildContext context) {
@@ -279,11 +282,7 @@ class _CustomTextField extends State {
         ), // Container
         SizedBox(width: 10),
         GestureDetector(
-          onTap: () {
-            setState(() {
-              onPressed(value1, value2);
-            });
-          },
+          onTap: onPressed,
           child: Container(
             width: 30,
             height: 30,

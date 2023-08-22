@@ -16,11 +16,12 @@ class MyApp extends StatelessWidget {
     event = eventsController.events[0];
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/eventPage',
       routes: {
         '/': (context) =>
             HomePage(eventsController: eventsController, setEvent: setEvent),
-        '/eventPage': (context) => EventPage(event: event, eventsController: eventsController),
+        '/eventPage': (context) =>
+            EventPage(event: event, eventsController: eventsController),
       },
     ); // MaterialApp
   }
@@ -69,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                       eventsController.addEvent(name: name, date: date);
                     });
                   }),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
 
               Text(
                 'Events',
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               ListView.builder(
                 shrinkWrap: true,
                 itemCount: eventsController.events.length,
@@ -111,11 +112,19 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(event.name),
+            Text(event.name,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
-            Text('Data: ${event.date}'),
+            Row(children: [
+              Text(
+                'Data: ',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Text(event.date),
+            ]),
             SizedBox(height: 10),
-            Text('Total fiadores: ${event.numberPeoples}'),
+            Text('Total fiadores: ${event.numberPeoples}',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ],
         ), // Column
       ), // Container
@@ -128,7 +137,8 @@ class EventPage extends StatefulWidget {
   final EventsController eventsController;
   EventPage({Key? key, required this.event, required this.eventsController});
   @override
-  _EventPageState createState() => _EventPageState(event: event, eventsController: eventsController);
+  _EventPageState createState() =>
+      _EventPageState(event: event, eventsController: eventsController);
 }
 
 class _EventPageState extends State<EventPage> {
@@ -144,19 +154,19 @@ class _EventPageState extends State<EventPage> {
     this.value = value;
   }
 
-  _EventPageState({Key? key, required this.event, required this.eventsController});
+  _EventPageState(
+      {Key? key, required this.event, required this.eventsController});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
-            icon: Icon(Icons.delete, color: Colors.black),
-            onPressed: () {
-              eventsController.removeEvent(event);
-              Navigator.of(context).pushReplacementNamed('/');
-            }
-          ),
+              icon: Icon(Icons.delete, color: Colors.black),
+              onPressed: () {
+                eventsController.removeEvent(event);
+                Navigator.of(context).pushReplacementNamed('/');
+              }),
         ],
       ),
       body: SingleChildScrollView(
@@ -173,11 +183,17 @@ class _EventPageState extends State<EventPage> {
                 ),
               ),
               SizedBox(height: 5),
-              Text(
-                'Data: ${event.date}',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
+              Row(
+                children: [
+                  Text(
+                    'Data: ',
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    event.date,
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ],
               ),
               SizedBox(height: 20),
               CustomTextField(
@@ -226,27 +242,33 @@ class _EventPageState extends State<EventPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text(people.name),
+              Text(
+                people.name,
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              ),
               SizedBox(width: 20),
-              Text('R\$ ${people.value}'),
+              Text(
+                'R\$ ${people.value}',
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              ),
             ],
           ), // Row
           GestureDetector(
-              onTap: () {
-                setState(() {
-                  event.removePeople(people);
-                });
-              },
-              child: Container(
-                width: 30,
-                height: 30,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.delete, color: Colors.black),
+            onTap: () {
+              setState(() {
+                event.removePeople(people);
+              });
+            },
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
               ),
+              child: Icon(Icons.delete, color: Colors.black),
             ),
+          ),
         ],
       ), // Row
     ); // Container
@@ -261,7 +283,7 @@ class EventsController {
   void addEvent({name, date}) {
     events.insert(0, EventModel(name: name, date: date));
   }
-  
+
   void removeEvent(EventModel event) {
     events.removeAt(events.indexOf(event));
   }
@@ -270,7 +292,9 @@ class EventsController {
 class EventModel {
   final String name;
   final String date;
-  List<PeopleModel> listPeoples = [PeopleModel(name: 'Joao vitor', value: '100.00')];
+  List<PeopleModel> listPeoples = [
+    PeopleModel(name: 'Joao vitor', value: '100.00')
+  ];
   int numberPeoples = 1;
 
   EventModel({required this.name, required this.date});
@@ -279,7 +303,7 @@ class EventModel {
     listPeoples.add(PeopleModel(name: name, value: value));
     numberPeoples++;
   }
-  
+
   void removePeople(PeopleModel people) {
     listPeoples.removeAt(listPeoples.indexOf(people));
     numberPeoples--;
@@ -317,17 +341,18 @@ class CustomTextField extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 10),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
-                width: 100,
-                height: 30,
+                width: 150,
+                height: 40,
+                padding: EdgeInsets.only(left: 10),
                 decoration: BoxDecoration(
-                  color: Colors.grey,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: TextField(
@@ -339,10 +364,11 @@ class CustomTextField extends StatelessWidget {
               ), // Container
               //SizedBox(width: 10),
               Container(
-                width: 60,
-                height: 30,
+                width: 100,
+                height: 40,
+                padding: EdgeInsets.only(left: 10),
                 decoration: BoxDecoration(
-                  color: Colors.grey,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: TextField(
@@ -356,8 +382,8 @@ class CustomTextField extends StatelessWidget {
               GestureDetector(
                 onTap: onPressed,
                 child: Container(
-                  width: 30,
-                  height: 30,
+                  width: 40,
+                  height: 40,
                   decoration: BoxDecoration(
                     color: Colors.blue,
                     shape: BoxShape.circle,
